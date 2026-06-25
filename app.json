@@ -1,17 +1,20 @@
 {
   "expo": {
-    "name": "react_native-recurrly",
-    "slug": "react_native-recurrly",
+    "name": "xrayRisk",
+    "slug": "xrayrisk",
+    "owner": "gentleman098",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "reactnativerecurrly",
+    "scheme": "xrayrisk",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.keshavarzi.xrayrisk",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.keshavarzi.xrayrisk",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
