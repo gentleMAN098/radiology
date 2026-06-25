@@ -33,9 +33,12 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
     protocols.findIndex((protocol) => protocol.id === selectedId),
   );
 
-  const handleMomentumEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const handleMomentumEnd = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
     const index = Math.round(event.nativeEvent.contentOffset.y / ITEM_HEIGHT);
-    const protocol = protocols[Math.max(0, Math.min(index, protocols.length - 1))];
+    const protocol =
+      protocols[Math.max(0, Math.min(index, protocols.length - 1))];
 
     if (protocol && protocol.id !== selectedId) {
       onChange(protocol.id);
@@ -62,36 +65,36 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
           },
         ]}
       />
-      <Animated.FlatList
-        data={protocols}
-        keyExtractor={(item) => String(item.id)}
+      <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         snapToInterval={ITEM_HEIGHT}
         decelerationRate="fast"
         bounces={false}
-        initialScrollIndex={selectedIndex}
-        getItemLayout={(_, index) => ({
-          length: ITEM_HEIGHT,
-          offset: ITEM_HEIGHT * index,
-          index,
-        })}
+        scrollEventThrottle={16}
         contentContainerStyle={styles.listContent}
+        contentOffset={{
+          x: 0,
+          y: selectedIndex * ITEM_HEIGHT,
+        }}
         onMomentumScrollEnd={handleMomentumEnd}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true },
         )}
-        renderItem={({ item, index }) => {
+      >
+        {protocols.map((item, index) => {
           const inputRange = [
             (index - 2) * ITEM_HEIGHT,
             index * ITEM_HEIGHT,
             (index + 2) * ITEM_HEIGHT,
           ];
+
           const opacity = scrollY.interpolate({
             inputRange,
             outputRange: [0.35, 1, 0.35],
             extrapolate: "clamp",
           });
+
           const scale = scrollY.interpolate({
             inputRange,
             outputRange: [0.92, 1, 0.92],
@@ -99,7 +102,16 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
           });
 
           return (
-            <Animated.View style={[styles.item, { opacity, transform: [{ scale }] }]}>
+            <Animated.View
+              key={item.id}
+              style={[
+                styles.item,
+                {
+                  opacity,
+                  transform: [{ scale }],
+                },
+              ]}
+            >
               <Text
                 numberOfLines={1}
                 style={[
@@ -113,6 +125,7 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
               >
                 {language === "fa" ? item.nameFa : item.nameEn}
               </Text>
+
               <Text
                 style={[
                   styles.dose,
@@ -127,8 +140,8 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
               </Text>
             </Animated.View>
           );
-        }}
-      />
+        })}
+      </Animated.ScrollView>
     </View>
   );
 };

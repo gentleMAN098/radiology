@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, useColorScheme } from "react-native";
+import { usePostHog } from "posthog-react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
 import { useThemePreference } from "@/src/theme/ThemeProvider";
@@ -10,13 +11,22 @@ const ThemeSwitcher = () => {
   const colors = getMedicalColors(isDark);
   const { direction, t } = useI18n();
   const { theme, toggleTheme } = useThemePreference();
+  const posthog = usePostHog();
+
+  const handleToggle = () => {
+    posthog.capture("theme_changed", {
+      new_theme: theme === "dark" ? "light" : "dark",
+      previous_theme: theme,
+    });
+    toggleTheme();
+  };
 
   return (
     <Pressable
       accessibilityRole="switch"
       accessibilityState={{ checked: theme === "dark" }}
       accessibilityLabel={t("common.theme")}
-      onPress={toggleTheme}
+      onPress={handleToggle}
       style={[
         styles.button,
         {

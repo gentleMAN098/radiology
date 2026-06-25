@@ -60,36 +60,36 @@ const AgeWheelPicker = ({ value, onChange }: AgeWheelPickerProps) => {
           },
         ]}
       />
-      <Animated.FlatList
-        data={AGES}
-        keyExtractor={(item) => String(item)}
+      <Animated.ScrollView
         showsVerticalScrollIndicator={false}
         snapToInterval={ITEM_HEIGHT}
         decelerationRate="fast"
         bounces={false}
-        initialScrollIndex={selectedIndex}
-        getItemLayout={(_, index) => ({
-          length: ITEM_HEIGHT,
-          offset: ITEM_HEIGHT * index,
-          index,
-        })}
         contentContainerStyle={styles.listContent}
+        scrollEventThrottle={16}
+        contentOffset={{
+          x: 0,
+          y: selectedIndex * ITEM_HEIGHT,
+        }}
         onMomentumScrollEnd={handleMomentumEnd}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: true },
         )}
-        renderItem={({ item, index }) => {
+      >
+        {AGES.map((item, index) => {
           const inputRange = [
             (index - 2) * ITEM_HEIGHT,
             index * ITEM_HEIGHT,
             (index + 2) * ITEM_HEIGHT,
           ];
+
           const opacity = scrollY.interpolate({
             inputRange,
             outputRange: [0.35, 1, 0.35],
             extrapolate: "clamp",
           });
+
           const scale = scrollY.interpolate({
             inputRange,
             outputRange: [0.9, 1, 0.9],
@@ -98,7 +98,14 @@ const AgeWheelPicker = ({ value, onChange }: AgeWheelPickerProps) => {
 
           return (
             <Animated.View
-              style={[styles.item, { opacity, transform: [{ scale }] }]}
+              key={item}
+              style={[
+                styles.item,
+                {
+                  opacity,
+                  transform: [{ scale }],
+                },
+              ]}
             >
               <Text
                 style={[
@@ -114,8 +121,8 @@ const AgeWheelPicker = ({ value, onChange }: AgeWheelPickerProps) => {
               </Text>
             </Animated.View>
           );
-        }}
-      />
+        })}
+      </Animated.ScrollView>
     </View>
   );
 };

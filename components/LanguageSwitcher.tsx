@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { usePostHog } from "posthog-react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
 import { Language } from "@/i18n/translations";
@@ -10,6 +11,7 @@ const LanguageSwitcher = () => {
   const { language, setLanguage, t, direction } = useI18n();
   const isDark = useColorScheme() === "dark";
   const colors = getMedicalColors(isDark);
+  const posthog = usePostHog();
 
   return (
     <View
@@ -31,7 +33,15 @@ const LanguageSwitcher = () => {
             key={item}
             accessibilityRole="button"
             accessibilityState={{ selected: isActive }}
-            onPress={() => setLanguage(item)}
+            onPress={() => {
+              if (!isActive) {
+                posthog.capture("language_changed", {
+                  new_language: item,
+                  previous_language: language,
+                });
+              }
+              setLanguage(item);
+            }}
             style={[
               styles.option,
               { backgroundColor: isActive ? colors.primary : "transparent" },

@@ -78,7 +78,15 @@ const AssessmentScreen = () => {
 
         {/* Actions Bar with border */}
         <View style={[styles.actionsBar, { borderBottomColor: colors.border }]}>
-          <View style={styles.actionsContainer}>
+          <View
+            style={[
+              styles.actionsContainer,
+              {
+                flexDirection: isRTL ? "row-reverse" : "row",
+                justifyContent: isRTL ? "flex-end" : "flex-start",
+              },
+            ]}
+          >
             <View style={styles.actionItem}>
               <ThemeSwitcher />
             </View>
@@ -182,16 +190,13 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     lineHeight: 39,
   },
-  // Actions bar with border
   actionsBar: {
     borderBottomWidth: 1,
     paddingBottom: 12,
     marginTop: 4,
   },
   actionsContainer: {
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start",
     gap: 12,
   },
   actionItem: {

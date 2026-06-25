@@ -1,6 +1,7 @@
 // app/report.tsx (or src/app/report.tsx)
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
+import { usePostHog } from "posthog-react-native";
 import {
   Pressable,
   StyleSheet,
@@ -37,6 +38,7 @@ const ReportScreen = () => {
   const isDark = useColorScheme() === "dark";
   const colors = getMedicalColors(isDark);
   const { direction, isRTL, language, locale, t } = useI18n();
+  const posthog = usePostHog();
   const params = useLocalSearchParams<{
     age?: string;
     gender?: Gender;
@@ -71,6 +73,20 @@ const ReportScreen = () => {
     () => calculateRiskAssessment(assessmentInput),
     [assessmentInput],
   );
+
+  useEffect(() => {
+    if (!loading) {
+      posthog.capture("report_viewed", {
+        age: assessmentInput.age,
+        gender: assessmentInput.gender,
+        scan_id: assessmentInput.scanId,
+        scan_count: assessmentInput.scanCount,
+        lar: report.lar,
+        risk_ratio: report.riskRatio,
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
   const protocol = CT_PROTOCOLS.find(
     (item) => item.id === assessmentInput.scanId,
   );
@@ -226,7 +242,15 @@ const ReportScreen = () => {
 
       <MedicalButton
         label={t("report.recalculate")}
-        onPress={() => router.back()}
+        onPress={() => {
+          posthog.capture("report_recalculated", {
+            age: assessmentInput.age,
+            gender: assessmentInput.gender,
+            scan_id: assessmentInput.scanId,
+            scan_count: assessmentInput.scanCount,
+          });
+          router.back();
+        }}
       />
     </Screen>
   );
