@@ -102,7 +102,7 @@ const ReportScreen = () => {
 
   if (loading) {
     return (
-      <Screen>
+      <Screen scrollable={true}>
         <Text
           style={[
             styles.title,
@@ -123,7 +123,7 @@ const ReportScreen = () => {
   }
 
   return (
-    <Screen>
+    <Screen scrollable={true}>
       <View style={styles.headerRow}>
         <View style={styles.titleBlock}>
           <Text
@@ -216,7 +216,8 @@ const ReportScreen = () => {
               maximumFractionDigits: 1,
             }),
           })}
-          animationType="radiation" // Using radiation animation
+          animationType="radiation"
+          accent="blue"
         />
         <BenchmarkCard
           accent="green"
@@ -226,7 +227,7 @@ const ReportScreen = () => {
               maximumFractionDigits: 0,
             }),
           })}
-          animationType="xray" // Using xray animation
+          animationType="xray"
         />
         <BenchmarkCard
           accent="amber"
@@ -236,7 +237,7 @@ const ReportScreen = () => {
               maximumFractionDigits: 0,
             }),
           })}
-          animationType="airplane" // Using airplane animation
+          animationType="airplane"
         />
       </View>
 
@@ -292,9 +293,8 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   benchmarkGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 10,
+    flexDirection: "column",
+    gap: 12,
   },
 });
 
