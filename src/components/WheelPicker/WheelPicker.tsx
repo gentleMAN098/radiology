@@ -81,7 +81,6 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
         },
       ]}
     >
-      {/* Highlight */}
       <View
         pointerEvents="none"
         style={[
