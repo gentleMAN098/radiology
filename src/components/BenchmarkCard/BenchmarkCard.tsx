@@ -46,7 +46,7 @@ const BenchmarkCard = ({
         <View style={styles.animationContainer}>
           <LottieView
             source={ANIMATIONS[animationType]}
-            autoPlay // capital P — this is lottie-react-native's API
+            autoPlay
             loop
             speed={0.8}
             style={{ width: 120, height: 80 }}

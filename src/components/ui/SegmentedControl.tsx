@@ -1,7 +1,11 @@
-import { Pressable, StyleSheet, Text, useColorScheme, View } from "react-native";
-
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
-
 import { getMedicalColors } from "./theme";
 
 interface SegmentOption<T extends string> {
@@ -22,10 +26,18 @@ const SegmentedControl = <T extends string>({
 }: SegmentedControlProps<T>) => {
   const isDark = useColorScheme() === "dark";
   const colors = getMedicalColors(isDark);
-  const { direction } = useI18n();
+  const { direction, isRTL } = useI18n();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surfaceMuted, direction }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.surfaceMuted,
+          flexDirection: isRTL ? "row-reverse" : "row",
+        },
+      ]}
+    >
       {options.map((option) => {
         const isActive = option.value === value;
 
@@ -59,12 +71,7 @@ const SegmentedControl = <T extends string>({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 8,
-    flexDirection: "row",
-    gap: 4,
-    padding: 4,
-  },
+  container: { borderRadius: 8, gap: 4, padding: 4 },
   option: {
     alignItems: "center",
     borderRadius: 7,
@@ -72,10 +79,7 @@ const styles = StyleSheet.create({
     minHeight: 48,
     justifyContent: "center",
   },
-  label: {
-    fontSize: 16,
-    fontWeight: "800",
-  },
+  label: { fontSize: 16, fontWeight: "800" },
 });
 
 export default SegmentedControl;

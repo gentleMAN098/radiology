@@ -7,7 +7,6 @@ import {
   useColorScheme,
   View,
 } from "react-native";
-
 import { useI18n } from "@/i18n/I18nProvider";
 import { getMedicalColors } from "../ui/theme";
 
@@ -26,7 +25,7 @@ const AgeInputStepper = ({
 }: AgeInputStepperProps) => {
   const isDark = useColorScheme() === "dark";
   const colors = getMedicalColors(isDark);
-  const { direction } = useI18n();
+  const { direction, isRTL } = useI18n();
 
   const [text, setText] = useState(String(value));
 
@@ -36,13 +35,9 @@ const AgeInputStepper = ({
 
   const handleChangeText = (input: string) => {
     const sanitized = input.replace(/[^0-9]/g, "");
-
     setText(sanitized);
-
     if (sanitized === "") return;
-
     const num = Number(sanitized);
-
     if (!Number.isNaN(num)) {
       onChange(Math.min(max, Math.max(min, num)));
     }
@@ -50,14 +45,11 @@ const AgeInputStepper = ({
 
   const handleBlur = () => {
     const num = Number(text);
-
     if (Number.isNaN(num) || text === "") {
       setText(String(value));
       return;
     }
-
     const clamped = Math.min(max, Math.max(min, num));
-
     setText(String(clamped));
     onChange(clamped);
   };
@@ -69,6 +61,7 @@ const AgeInputStepper = ({
         {
           borderColor: colors.border,
           backgroundColor: colors.surface,
+          flexDirection: isRTL ? "row-reverse" : "row",
         },
       ]}
     >
@@ -89,10 +82,7 @@ const AgeInputStepper = ({
         maxLength={3}
         style={[
           styles.input,
-          {
-            color: colors.text,
-            writingDirection: direction,
-          },
+          { color: colors.text, writingDirection: direction },
         ]}
       />
 
@@ -113,7 +103,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
     borderWidth: 1,
-    flexDirection: "row",
     height: 56,
   },
   control: {
@@ -122,10 +111,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: "100%",
   },
-  controlText: {
-    fontSize: 28,
-    fontWeight: "800",
-  },
+  controlText: { fontSize: 28, fontWeight: "800" },
   input: {
     flex: 1,
     textAlign: "center",

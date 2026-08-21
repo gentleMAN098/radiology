@@ -1,6 +1,12 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, useColorScheme, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+  Pressable,
+} from "react-native";
 
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useI18n } from "@/i18n/I18nProvider";
@@ -15,11 +21,23 @@ import { getMedicalColors } from "@/src/components/ui/theme";
 import { CT_PROTOCOLS } from "@/src/data/protocols";
 import { Gender } from "@/src/domain/risk-engine/types";
 import AgeInputStepper from "@/src/components/ui/AgeNumberStepper";
+import InfoButton from "@/src/components/ui/InfoButton";
+import { Language, translations } from "@/i18n/translations";
+import InfoModal from "@/src/components/ui/Modal";
+import Card from "@/src/components/ui/Card";
+import Checkbox from "@/src/components/ui/Checkbox";
+import { useContentTranslations } from "@/src/hooks/hooks";
 
 const AssessmentScreen = () => {
   const isDark = useColorScheme() === "dark";
   const colors = getMedicalColors(isDark);
-  const { direction, isRTL, t } = useI18n();
+  const { direction, isRTL, t, language } = useI18n();
+  const content = useContentTranslations();
+
+  const [guideVisible, setGuideVisible] = useState(false);
+  const [doseRiskVisible, setDoseRiskVisible] = useState(false);
+  const [termsVisible, setTermsVisible] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const [step, setStep] = useState(1);
   const [age, setAge] = useState(40);
@@ -28,8 +46,8 @@ const AssessmentScreen = () => {
   const [scanCount, setScanCount] = useState(1);
   const [isCalculating, setIsCalculating] = useState(false);
 
-  const canCalculate = age >= 1 && age <= 120 && scanCount >= 1;
-
+  const canCalculate =
+    age >= 1 && age <= 120 && scanCount >= 1 && agreedToTerms;
   const handleNext = () => setStep((prev) => prev + 1);
   const handleBack = () => setStep((prev) => prev - 1);
 
@@ -60,18 +78,35 @@ const AssessmentScreen = () => {
         return (
           <View style={styles.stepContainer}>
             <View style={styles.headerContainer}>
-              <Text style={[styles.appName, { color: colors.primary, textAlign: headerAlignment }]}>
+              <Text
+                style={[
+                  styles.appName,
+                  { color: colors.primary, textAlign: headerAlignment },
+                ]}
+              >
                 {t("common.ctRiskAppName")}
               </Text>
-              <Text style={[styles.title, { color: colors.text, textAlign: headerAlignment }]}>
+              <Text
+                style={[
+                  styles.title,
+                  { color: colors.text, textAlign: headerAlignment },
+                ]}
+              >
                 {t("assessment.aboutTitle")}
               </Text>
             </View>
-
-            <Text style={[styles.description, { color: colors.text, textAlign: headerAlignment }]}>
+            <InfoButton
+              accessibilityLabel={t("assessment.aboutDescription")}
+              onPress={() => setGuideVisible(true)}
+            />
+            <Text
+              style={[
+                styles.description,
+                { color: colors.text, textAlign: headerAlignment },
+              ]}
+            >
               {t("assessment.aboutDescription")}
             </Text>
-
             <View style={styles.settingsBox}>
               <Field label={t("common.theme")}>
                 <ThemeSwitcher />
@@ -80,10 +115,17 @@ const AssessmentScreen = () => {
                 <LanguageSwitcher />
               </Field>
             </View>
-
             <View style={styles.footer}>
               <MedicalButton label={t("common.next")} onPress={handleNext} />
             </View>
+            <InfoModal
+              visible={guideVisible}
+              onClose={() => setGuideVisible(false)}
+              title={content.guide.title}
+              intro={content.guide.intro}
+              sections={content.guide.sections}
+              references={content.guide.references}
+            />
           </View>
         );
 
@@ -91,21 +133,38 @@ const AssessmentScreen = () => {
         return (
           <View style={styles.stepContainer}>
             <View style={[styles.headerRow, { flexDirection: rowDirection }]}>
-              <Pressable onPress={handleBack} style={[styles.backButton, { borderColor: colors.border }]}>
-                <Text style={{ color: colors.primary, fontWeight: '700' }}>{t("common.back")}</Text>
+              <Pressable
+                onPress={handleBack}
+                style={[styles.backButton, { borderColor: colors.border }]}
+              >
+                <Text style={{ color: colors.primary, fontWeight: "700" }}>
+                  {t("common.back")}
+                </Text>
               </Pressable>
-              <Text style={[styles.stepIndicator, { color: colors.mutedText }]}>2 / 3</Text>
+              <Text style={[styles.stepIndicator, { color: colors.mutedText }]}>
+                2 / 3
+              </Text>
             </View>
 
             <View style={styles.headerContainer}>
-              <Text style={[styles.title, { color: colors.text, textAlign: headerAlignment }]}>
+              <Text
+                style={[
+                  styles.title,
+                  { color: colors.text, textAlign: headerAlignment },
+                ]}
+              >
                 {t("assessment.step2Title")}
               </Text>
             </View>
 
             <View style={styles.form}>
               <Field label={t("assessment.age")}>
-                <AgeInputStepper value={age} min={1} max={120} onChange={setAge} />
+                <AgeInputStepper
+                  value={age}
+                  min={1}
+                  max={120}
+                  onChange={setAge}
+                />
               </Field>
 
               <Field label={t("assessment.gender")}>
@@ -130,16 +189,32 @@ const AssessmentScreen = () => {
         return (
           <View style={styles.stepContainer}>
             <View style={[styles.headerRow, { flexDirection: rowDirection }]}>
-              <Pressable onPress={handleBack} style={[styles.backButton, { borderColor: colors.border }]}>
-                <Text style={{ color: colors.primary, fontWeight: '700' }}>{t("common.back")}</Text>
+              <Pressable
+                onPress={handleBack}
+                style={[styles.backButton, { borderColor: colors.border }]}
+              >
+                <Text style={{ color: colors.primary, fontWeight: "700" }}>
+                  {t("common.back")}
+                </Text>
               </Pressable>
-              <Text style={[styles.stepIndicator, { color: colors.mutedText }]}>3 / 3</Text>
+              <Text style={[styles.stepIndicator, { color: colors.mutedText }]}>
+                3 / 3
+              </Text>
             </View>
 
             <View style={styles.headerContainer}>
-              <Text style={[styles.title, { color: colors.text, textAlign: headerAlignment }]}>
+              <Text
+                style={[
+                  styles.title,
+                  { color: colors.text, textAlign: headerAlignment },
+                ]}
+              >
                 {t("assessment.step3Title")}
               </Text>
+              <InfoButton
+                accessibilityLabel={content.doseRisk.title}
+                onPress={() => setDoseRiskVisible(true)}
+              />
             </View>
 
             <View style={styles.form}>
@@ -155,17 +230,68 @@ const AssessmentScreen = () => {
                 label={t("assessment.numberOfScans")}
                 error={scanCount < 1 ? t("assessment.scansError") : undefined}
               >
-                <NumberStepper value={scanCount} min={1} onChange={setScanCount} />
+                <NumberStepper
+                  value={scanCount}
+                  min={1}
+                  onChange={setScanCount}
+                />
               </Field>
             </View>
+            <Card style={{ gap: 12 }}>
+              <View
+                style={[
+                  {
+                    flexDirection: rowDirection,
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  },
+                ]}
+              >
+                <Text
+                  style={{
+                    color: colors.text,
+                    fontWeight: "800",
+                    fontSize: 15,
+                  }}
+                >
+                  {content.terms.title}
+                </Text>
+                <InfoButton
+                  accessibilityLabel={content.terms.title}
+                  onPress={() => setTermsVisible(true)}
+                />
+              </View>
+              <Checkbox
+                checked={agreedToTerms}
+                onChange={setAgreedToTerms}
+                label={content.terms.checkboxLabel}
+              />
+            </Card>
 
             <View style={styles.footer}>
               <MedicalButton
                 disabled={!canCalculate || isCalculating}
-                label={isCalculating ? t("assessment.calculating") : t("assessment.calculate")}
+                label={
+                  isCalculating
+                    ? t("assessment.calculating")
+                    : t("assessment.calculate")
+                }
                 onPress={handleCalculate}
               />
             </View>
+
+            <InfoModal
+              visible={doseRiskVisible}
+              onClose={() => setDoseRiskVisible(false)}
+              title={content.doseRisk.title}
+              sections={content.doseRisk.sections}
+            />
+            <InfoModal
+              visible={termsVisible}
+              onClose={() => setTermsVisible(false)}
+              title={content.terms.title}
+              sections={content.terms.sections}
+            />
           </View>
         );
 
@@ -178,7 +304,15 @@ const AssessmentScreen = () => {
     <Screen>
       <View style={styles.progressBarContainer}>
         <View style={[styles.progressBar, { backgroundColor: colors.border }]}>
-          <View style={[styles.progressIndicator, { backgroundColor: colors.primary, width: `${(step / 3) * 100}%` }]} />
+          <View
+            style={[
+              styles.progressIndicator,
+              {
+                backgroundColor: colors.primary,
+                width: `${(step / 3) * 100}%`,
+              },
+            ]}
+          />
         </View>
       </View>
       {renderStep()}
@@ -193,21 +327,21 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 4,
     borderRadius: 2,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   progressIndicator: {
-    height: '100%',
+    height: "100%",
   },
   stepContainer: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   headerContainer: {
     gap: 8,
     marginBottom: 16,
   },
   headerRow: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   backButton: {
@@ -218,13 +352,12 @@ const styles = StyleSheet.create({
   },
   stepIndicator: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   appName: {
     fontSize: 14,
     fontWeight: "900",
     letterSpacing: 0.8,
-    textTransform: "uppercase",
   },
   title: {
     fontSize: 28,
@@ -234,20 +367,20 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 18,
     lineHeight: 26,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 24,
   },
   settingsBox: {
     gap: 20,
     padding: 16,
     borderRadius: 12,
-    backgroundColor: 'rgba(0,0,0,0.02)',
+    backgroundColor: "rgba(0,0,0,0.02)",
   },
   form: {
     gap: 24,
   },
   footer: {
-    marginTop: 'auto',
+    marginTop: "auto",
     paddingTop: 20,
   },
 });

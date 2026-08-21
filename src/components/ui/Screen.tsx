@@ -1,7 +1,12 @@
 import { PropsWithChildren } from "react";
-import { SafeAreaView, StyleSheet, useColorScheme, View, ScrollView } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  useColorScheme,
+  View,
+  ScrollView,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useI18n } from "@/i18n/I18nProvider";
 import { getMedicalColors } from "./theme";
 
 interface ScreenProps extends PropsWithChildren {
@@ -12,15 +17,8 @@ const Screen = ({ children, scrollable = false }: ScreenProps) => {
   const isDark = useColorScheme() === "dark";
   const colors = getMedicalColors(isDark);
   const insets = useSafeAreaInsets();
-  const { isRTL } = useI18n();
 
-  const contentStyle = [
-    styles.content,
-    {
-      paddingBottom: insets.bottom + 32,
-      direction: (isRTL ? "rtl" : "ltr") as "rtl" | "ltr",
-    },
-  ];
+  const contentStyle = [styles.content, { paddingBottom: insets.bottom + 32 }];
 
   return (
     <SafeAreaView
@@ -35,24 +33,15 @@ const Screen = ({ children, scrollable = false }: ScreenProps) => {
           {children}
         </ScrollView>
       ) : (
-        <View style={[contentStyle, { flex: 1 }]}>
-          {children}
-        </View>
+        <View style={[contentStyle, { flex: 1 }]}>{children}</View>
       )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-  content: {
-    flexGrow: 1,
-    gap: 20,
-    padding: 20,
-    paddingTop: 40,
-  },
+  safeArea: { flex: 1 },
+  content: { flexGrow: 1, gap: 20, padding: 20, paddingTop: 40 },
 });
 
 export default Screen;

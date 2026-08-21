@@ -1,4 +1,3 @@
-// app/report.tsx (or src/app/report.tsx)
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { usePostHog } from "posthog-react-native";
@@ -21,6 +20,7 @@ import { getMedicalColors } from "@/src/components/ui/theme";
 import { CT_PROTOCOLS } from "@/src/data/protocols";
 import { calculateRiskAssessment } from "@/src/domain/risk-engine/calculations";
 import { Gender } from "@/src/domain/risk-engine/types";
+import { formatBackgroundRadiation } from "@/lib/utils";
 
 const formatNumber = (
   value: number,
@@ -85,7 +85,7 @@ const ReportScreen = () => {
         risk_ratio: report.riskRatio,
       });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
   const protocol = CT_PROTOCOLS.find(
     (item) => item.id === assessmentInput.scanId,
@@ -211,10 +211,12 @@ const ReportScreen = () => {
       <View style={styles.benchmarkGrid}>
         <BenchmarkCard
           title={t("report.backgroundRadiation")}
-          value={t("report.backgroundEquivalent", {
-            count: formatNumber(report.backgroundYears, locale, {
-              maximumFractionDigits: 1,
-            }),
+          value={t("report.backgroundEquivalentValue", {
+            value: formatBackgroundRadiation(
+              report.backgroundYears,
+              language,
+              locale,
+            ),
           })}
           animationType="radiation"
           accent="blue"

@@ -1,7 +1,11 @@
-import { Pressable, StyleSheet, Text, useColorScheme, View } from "react-native";
-
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
-
 import { getMedicalColors } from "./theme";
 
 interface NumberStepperProps {
@@ -13,10 +17,19 @@ interface NumberStepperProps {
 const NumberStepper = ({ value, min = 1, onChange }: NumberStepperProps) => {
   const isDark = useColorScheme() === "dark";
   const colors = getMedicalColors(isDark);
-  const { direction } = useI18n();
+  const { direction, isRTL } = useI18n();
 
   return (
-    <View style={[styles.container, { borderColor: colors.border, backgroundColor: colors.surface }]}>
+    <View
+      style={[
+        styles.container,
+        {
+          borderColor: colors.border,
+          backgroundColor: colors.surface,
+          flexDirection: isRTL ? "row-reverse" : "row",
+        },
+      ]}
+    >
       <Pressable
         accessibilityRole="button"
         disabled={value <= min}
@@ -25,7 +38,12 @@ const NumberStepper = ({ value, min = 1, onChange }: NumberStepperProps) => {
       >
         <Text style={[styles.controlText, { color: colors.primary }]}>-</Text>
       </Pressable>
-      <Text style={[styles.value, { color: colors.text, writingDirection: direction }]}>
+      <Text
+        style={[
+          styles.value,
+          { color: colors.text, writingDirection: direction },
+        ]}
+      >
         {value}
       </Text>
       <Pressable
@@ -44,7 +62,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
     borderWidth: 1,
-    flexDirection: "row",
     height: 56,
     justifyContent: "space-between",
   },
@@ -54,14 +71,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 64,
   },
-  controlText: {
-    fontSize: 28,
-    fontWeight: "800",
-  },
-  value: {
-    fontSize: 22,
-    fontWeight: "900",
-  },
+  controlText: { fontSize: 28, fontWeight: "800" },
+  value: { fontSize: 22, fontWeight: "900" },
 });
 
 export default NumberStepper;
