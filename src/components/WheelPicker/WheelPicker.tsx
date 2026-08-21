@@ -3,15 +3,16 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
   TouchableOpacity,
-  Platform,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
 } from "react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
+import { useRtlText } from "@/src/hooks/useRtlText";
 import { CtScanProtocol } from "@/src/domain/risk-engine/types";
-import { getMedicalColors } from "../ui/theme";
 
 const ITEM_HEIGHT = 54;
 const VISIBLE_ITEMS = 5;
@@ -24,9 +25,9 @@ interface WheelPickerProps {
 }
 
 const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
-  const { direction, isRTL, language } = useI18n();
+  const { colors } = useThemeColors();
+  const { language, t } = useI18n();
+  const rtlText = useRtlText();
 
   const scrollRef = useRef<ScrollView>(null);
 
@@ -53,7 +54,9 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
     });
   }, [selectedId, protocols]);
 
-  const handleScrollEnd = (event: any) => {
+  const handleScrollEnd = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     const index = Math.round(offsetY / ITEM_HEIGHT);
     const clamped = Math.max(0, Math.min(index, protocols.length - 1));
@@ -123,10 +126,9 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
                   numberOfLines={1}
                   style={{
                     color: isSelected ? colors.primary : colors.text,
-                    textAlign: isRTL ? "right" : "left",
-                    writingDirection: direction,
                     fontSize: isSelected ? 18 : 16,
                     fontWeight: isSelected ? "900" : "600",
+                    ...rtlText,
                   }}
                 >
                   {language === "fa" ? item.nameFa : item.nameEn}
@@ -135,13 +137,12 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
                 <Text
                   style={{
                     color: isSelected ? colors.primary : colors.mutedText,
-                    textAlign: isRTL ? "right" : "left",
-                    writingDirection: direction,
                     fontSize: isSelected ? 13 : 12,
                     fontWeight: isSelected ? "800" : "600",
+                    ...rtlText,
                   }}
                 >
-                  {item.effectiveDose} mSv
+                  {item.effectiveDose} {t("assessment.doseUnit")}
                 </Text>
               </View>
             </TouchableOpacity>

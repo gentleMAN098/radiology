@@ -1,9 +1,10 @@
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
+import { useRtlText } from "@/src/hooks/useRtlText";
 
 import Card from "../ui/Card";
-import { getMedicalColors } from "../ui/theme";
 
 interface RiskSummaryProps {
   riskPercent: string;
@@ -12,70 +13,34 @@ interface RiskSummaryProps {
 }
 
 const RiskSummary = ({ riskPercent, ratio, totalRiskText }: RiskSummaryProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
-  const { direction, isRTL, t } = useI18n();
+  const { colors } = useThemeColors();
+  const { t } = useI18n();
+  const rtlText = useRtlText();
 
   return (
     <Card style={styles.card}>
-      <Text
-        style={[
-          styles.sectionLabel,
-          {
-            color: colors.mutedText,
-            textAlign: isRTL ? "right" : "left",
-            writingDirection: direction,
-          },
-        ]}
-      >
+      <Text style={[styles.sectionLabel, { color: colors.mutedText }, rtlText]}>
         {t("report.riskSummary")}
       </Text>
-      <Text
-        style={[
-          styles.largeNumber,
-          {
-            color: colors.primary,
-            textAlign: isRTL ? "right" : "left",
-            writingDirection: direction,
-          },
-        ]}
-      >
+      <Text style={[styles.largeNumber, { color: colors.primary }, rtlText]}>
         {riskPercent}
       </Text>
-      <Text
-        style={[
-          styles.subtitle,
-          {
-            color: colors.text,
-            textAlign: isRTL ? "right" : "left",
-            writingDirection: direction,
-          },
-        ]}
-      >
+      <Text style={[styles.subtitle, { color: colors.text }, rtlText]}>
         {t("report.additionalRisk")}
       </Text>
       <View style={[styles.row, { borderColor: colors.border }]}>
-        <Text style={[styles.rowLabel, { color: colors.mutedText, writingDirection: direction }]}>
+        <Text style={[styles.rowLabel, { color: colors.mutedText }, rtlText]}>
           {t("report.ratio")}
         </Text>
-        <Text style={[styles.rowValue, { color: colors.text, writingDirection: direction }]}>
+        <Text style={[styles.rowValue, { color: colors.text }, rtlText]}>
           {ratio}
         </Text>
       </View>
       <View style={[styles.row, { borderColor: colors.border }]}>
-        <Text style={[styles.rowLabel, { color: colors.mutedText, writingDirection: direction }]}>
+        <Text style={[styles.rowLabel, { color: colors.mutedText }, rtlText]}>
           {t("report.totalRisk")}
         </Text>
-        <Text
-          style={[
-            styles.totalRisk,
-            {
-              color: colors.text,
-              textAlign: isRTL ? "right" : "left",
-              writingDirection: direction,
-            },
-          ]}
-        >
+        <Text style={[styles.totalRisk, { color: colors.text }, rtlText]}>
           {totalRiskText}
         </Text>
       </View>

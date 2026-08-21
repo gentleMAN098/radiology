@@ -1,12 +1,7 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
-import { getMedicalColors } from "./theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
+import { useRtlText } from "@/src/hooks/useRtlText";
 
 interface CheckboxProps {
   checked: boolean;
@@ -21,9 +16,9 @@ const Checkbox = ({
   label,
   accessibilityLabel,
 }: CheckboxProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
-  const { direction, isRTL } = useI18n();
+  const { colors } = useThemeColors();
+  const { isRTL } = useI18n();
+  const rtlText = useRtlText();
 
   return (
     <Pressable
@@ -47,15 +42,7 @@ const Checkbox = ({
         )}
       </View>
       <Text
-        style={[
-          styles.label,
-          {
-            color: colors.text,
-            textAlign: isRTL ? "right" : "left",
-            writingDirection: direction,
-            flex: 1,
-          },
-        ]}
+        style={[styles.label, { color: colors.text, flex: 1 }, rtlText]}
       >
         {label}
       </Text>

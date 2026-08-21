@@ -1,21 +1,14 @@
 import { PropsWithChildren } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  useColorScheme,
-  View,
-  ScrollView,
-} from "react-native";
+import { SafeAreaView, StyleSheet, View, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getMedicalColors } from "./theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
 
 interface ScreenProps extends PropsWithChildren {
   scrollable?: boolean;
 }
 
 const Screen = ({ children, scrollable = false }: ScreenProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
+  const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
 
   const contentStyle = [styles.content, { paddingBottom: insets.bottom + 32 }];

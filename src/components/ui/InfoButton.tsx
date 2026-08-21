@@ -1,5 +1,5 @@
-import { Pressable, StyleSheet, Text, useColorScheme } from "react-native";
-import { getMedicalColors } from "./theme";
+import { Pressable, StyleSheet, Text } from "react-native";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
 
 interface InfoButtonProps {
   onPress: () => void;
@@ -7,8 +7,7 @@ interface InfoButtonProps {
 }
 
 const InfoButton = ({ onPress, accessibilityLabel }: InfoButtonProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
+  const { colors } = useThemeColors();
 
   return (
     <Pressable

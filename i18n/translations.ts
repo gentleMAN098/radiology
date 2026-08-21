@@ -1,20 +1,20 @@
 export const translations = {
   en: {
-    // inside en: { ... }
     content: {
       guide: {
         title: "CT Scan Guide & Understanding Risk",
         intro:
           "Hello! I am here to calculate the dose and risk of your CT scan. Please select one of the options below:",
+        // TODO(content): sections 2-5 are missing. This is real medical/educational
+        // copy that needs to come from the team, not be authored by AI.
         sections: [
           {
             heading: "1. Overview of Computed Tomography",
             paragraphs: [
               "Computed Tomography (CT) is an advanced medical imaging tool. It uses X-rays and computers to create clear, 3D pictures of the inside of the body...",
-              // ...rest of paragraph, split into separate strings per paragraph
+              // TODO(content): paragraph is truncated ("...") — needs the full text.
             ],
           },
-          // sections 2–5, same shape
         ],
         references: [
           {
@@ -61,9 +61,9 @@ export const translations = {
       },
       doseRisk: {
         title: "Dose & Risk Calculation",
-        sections: [
-          // your "Understanding Your Results & Methodology" content, same section shape
-        ],
+        // TODO(content): entirely missing — needs the "Understanding Your
+        // Results & Methodology" copy from the team, not to be authored by AI.
+        sections: [],
         disclaimerTitle: "Disclaimer",
         disclaimerBody:
           "Educational purposes only. Not a substitute for professional medical advice, diagnosis, or treatment. Please consult your physician.",
@@ -72,9 +72,9 @@ export const translations = {
         title: "Privacy & Terms",
         checkboxLabel:
           "I have read and agree to the Privacy Policy and Terms of Use.",
-        sections: [
-          // your Terms + Privacy Policy content
-        ],
+        // TODO(content): entirely missing — this must hold the actual Terms of
+        // Use / Privacy Policy text, reviewed by the team/legal, not authored by AI.
+        sections: [],
         contactEmail: "ctcalc.support@gmail.com",
       },
     },
@@ -144,51 +144,16 @@ export const translations = {
       recalculate: "Recalculate",
       loading: "Preparing report...",
     },
-    home: {
-      title: "Welcome to Recurrly",
-      onboardingLink: "Go to onboarding",
-    },
     onboarding: {
       title: "Your subscriptions, in your language.",
       subtitle: "Switch between English and Persian anytime.",
     },
-    subscription: {
-      payment: "Payment:",
-      category: "Category:",
-      started: "Started:",
-      renewalDate: "Renewal date:",
-      status: "Status:",
-      daysLeft: "{{count}} days left",
-      lastDay: "Last day",
-      statuses: {
-        active: "Active",
-        paused: "Paused",
-        cancelled: "Cancelled",
-      },
-      frequencies: {
-        Monthly: "Monthly",
-        Yearly: "Yearly",
-      },
-      categories: {
-        Entertainment: "Entertainment",
-        "AI Tools": "AI Tools",
-        "Developer Tools": "Developer Tools",
-        Design: "Design",
-        Productivity: "Productivity",
-        Other: "Other",
-      },
-    },
-    createSubscription: {
-      title: "New Subscription",
-      name: "Name",
-      namePlaceholder: "Subscription name",
-      price: "Price",
-      frequency: "Frequency",
-      category: "Category",
-      submit: "Create Subscription",
-    },
   },
   fa: {
+    // TODO(content): "fa" has no `content` key at all (guide/dose-risk/terms).
+    // useContentTranslations() falls back to the English copy for Farsi users,
+    // and that English copy is itself incomplete (see the "en" TODOs above).
+    // This needs real Farsi medical/legal content from the team, not an AI translation.
     common: {
       appName: "ریکارلی",
       ctRiskAppName: "بینش پرتو دوز",
@@ -253,48 +218,9 @@ export const translations = {
       recalculate: "محاسبه دوباره",
       loading: "در حال آماده سازی گزارش...",
     },
-    home: {
-      title: "به ریکارلی خوش آمدید",
-      onboardingLink: "رفتن به شروع",
-    },
     onboarding: {
       title: "اشتراک هایت را به زبان خودت مدیریت کن.",
       subtitle: "هر زمان خواستی بین فارسی و انگلیسی جابه جا شو.",
-    },
-    subscription: {
-      payment: "پرداخت:",
-      category: "دسته بندی:",
-      started: "شروع:",
-      renewalDate: "تاریخ تمدید:",
-      status: "وضعیت:",
-      daysLeft: "{{count}} روز مانده",
-      lastDay: "روز آخر",
-      statuses: {
-        active: "فعال",
-        paused: "متوقف",
-        cancelled: "لغو شده",
-      },
-      frequencies: {
-        Monthly: "ماهانه",
-        Yearly: "سالانه",
-      },
-      categories: {
-        Entertainment: "سرگرمی",
-        "AI Tools": "ابزارهای هوش مصنوعی",
-        "Developer Tools": "ابزارهای توسعه",
-        Design: "طراحی",
-        Productivity: "بهره وری",
-        Other: "سایر",
-      },
-    },
-    createSubscription: {
-      title: "اشتراک جدید",
-      name: "نام",
-      namePlaceholder: "نام اشتراک",
-      price: "قیمت",
-      frequency: "دوره پرداخت",
-      category: "دسته بندی",
-      submit: "ساخت اشتراک",
     },
   },
 } as const;

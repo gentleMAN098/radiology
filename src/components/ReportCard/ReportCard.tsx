@@ -1,9 +1,10 @@
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
+import { useRtlText } from "@/src/hooks/useRtlText";
 
 import Card from "../ui/Card";
-import { getMedicalColors } from "../ui/theme";
 
 interface ReportCardProps {
   rows: {
@@ -13,39 +14,21 @@ interface ReportCardProps {
 }
 
 const ReportCard = ({ rows }: ReportCardProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
-  const { direction, isRTL, t } = useI18n();
+  const { colors } = useThemeColors();
+  const { t } = useI18n();
+  const rtlText = useRtlText();
 
   return (
     <Card>
-      <Text
-        style={[
-          styles.title,
-          {
-            color: colors.text,
-            textAlign: isRTL ? "right" : "left",
-            writingDirection: direction,
-          },
-        ]}
-      >
+      <Text style={[styles.title, { color: colors.text }, rtlText]}>
         {t("report.scanDetails")}
       </Text>
       {rows.map((row) => (
         <View key={row.label} style={[styles.row, { borderColor: colors.border }]}>
-          <Text style={[styles.label, { color: colors.mutedText, writingDirection: direction }]}>
+          <Text style={[styles.label, { color: colors.mutedText }, rtlText]}>
             {row.label}
           </Text>
-          <Text
-            style={[
-              styles.value,
-              {
-                color: colors.text,
-                textAlign: isRTL ? "right" : "left",
-                writingDirection: direction,
-              },
-            ]}
-          >
+          <Text style={[styles.value, { color: colors.text }, rtlText]}>
             {row.value}
           </Text>
         </View>

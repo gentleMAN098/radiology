@@ -1,9 +1,8 @@
 import { ReactNode } from "react";
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-import { useI18n } from "@/i18n/I18nProvider";
-
-import { getMedicalColors } from "./theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
+import { useRtlText } from "@/src/hooks/useRtlText";
 
 interface FieldProps {
   label: string;
@@ -12,36 +11,17 @@ interface FieldProps {
 }
 
 const Field = ({ label, error, children }: FieldProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
-  const { direction, isRTL } = useI18n();
+  const { colors } = useThemeColors();
+  const rtlText = useRtlText();
 
   return (
     <View style={styles.field}>
-      <Text
-        style={[
-          styles.label,
-          {
-            color: colors.text,
-            textAlign: isRTL ? "right" : "left",
-            writingDirection: direction,
-          },
-        ]}
-      >
+      <Text style={[styles.label, { color: colors.text }, rtlText]}>
         {label}
       </Text>
       {children}
       {!!error && (
-        <Text
-          style={[
-            styles.error,
-            {
-              color: colors.danger,
-              textAlign: isRTL ? "right" : "left",
-              writingDirection: direction,
-            },
-          ]}
-        >
+        <Text style={[styles.error, { color: colors.danger }, rtlText]}>
           {error}
         </Text>
       )}

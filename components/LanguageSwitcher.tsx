@@ -1,16 +1,15 @@
-import { Pressable, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { usePostHog } from "posthog-react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
 import { Language } from "@/i18n/translations";
-import { getMedicalColors } from "@/src/components/ui/theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
 
 const LANGUAGES: Language[] = ["en", "fa"];
 
 const LanguageSwitcher = () => {
-  const { language, setLanguage, t, direction } = useI18n();
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
+  const { language, setLanguage, t, direction, isRTL } = useI18n();
+  const { colors } = useThemeColors();
   const posthog = usePostHog();
 
   return (
@@ -22,6 +21,7 @@ const LanguageSwitcher = () => {
           backgroundColor: colors.surface,
           borderColor: colors.border,
           direction,
+          flexDirection: isRTL ? "row-reverse" : "row",
         },
       ]}
     >

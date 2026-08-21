@@ -1,15 +1,14 @@
 import { PropsWithChildren } from "react";
-import { StyleSheet, useColorScheme, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 
-import { getMedicalColors } from "./theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
 
 interface CardProps extends PropsWithChildren {
   style?: ViewStyle;
 }
 
 const Card = ({ children, style }: CardProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
+  const { colors } = useThemeColors();
 
   return (
     <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }, style]}>

@@ -1,8 +1,9 @@
 import LottieView from "lottie-react-native";
-import { StyleSheet, Text, useColorScheme, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
+import { useRtlText } from "@/src/hooks/useRtlText";
 import Card from "../ui/Card";
-import { getMedicalColors } from "../ui/theme";
 
 // Use remote URLs or bundled JS/JSON — .lottie binary files are not Metro-resolvable
 const ANIMATIONS = {
@@ -24,9 +25,9 @@ const BenchmarkCard = ({
   accent = "blue",
   animationType = "airplane",
 }: BenchmarkCardProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
-  const { direction, isRTL } = useI18n();
+  const { colors } = useThemeColors();
+  const { isRTL } = useI18n();
+  const rtlText = useRtlText();
 
   const accentColor =
     accent === "green"
@@ -60,28 +61,10 @@ const BenchmarkCard = ({
           ]}
         >
           <View style={[styles.marker, { backgroundColor: accentColor }]} />
-          <Text
-            style={[
-              styles.title,
-              {
-                color: colors.text,
-                textAlign: isRTL ? "right" : "left",
-                writingDirection: direction,
-              },
-            ]}
-          >
+          <Text style={[styles.title, { color: colors.text }, rtlText]}>
             {title}
           </Text>
-          <Text
-            style={[
-              styles.value,
-              {
-                color: colors.mutedText,
-                textAlign: isRTL ? "right" : "left",
-                writingDirection: direction,
-              },
-            ]}
-          >
+          <Text style={[styles.value, { color: colors.mutedText }, rtlText]}>
             {value}
           </Text>
         </View>

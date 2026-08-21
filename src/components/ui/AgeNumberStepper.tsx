@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
-import { getMedicalColors } from "../ui/theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
 
 interface AgeInputStepperProps {
   value: number;
@@ -23,8 +16,7 @@ const AgeInputStepper = ({
   max = 120,
   onChange,
 }: AgeInputStepperProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
+  const { colors } = useThemeColors();
   const { direction, isRTL } = useI18n();
 
   const [text, setText] = useState(String(value));

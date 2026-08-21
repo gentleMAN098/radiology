@@ -1,15 +1,15 @@
-import { Pressable, StyleSheet, Text, useColorScheme } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import { usePostHog } from "posthog-react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
 import { useThemePreference } from "@/src/theme/ThemeProvider";
-
-import { getMedicalColors } from "./ui/theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
+import { useRtlText } from "@/src/hooks/useRtlText";
 
 const ThemeSwitcher = () => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
-  const { direction, t } = useI18n();
+  const { colors } = useThemeColors();
+  const { t } = useI18n();
+  const rtlText = useRtlText();
   const { theme, toggleTheme } = useThemePreference();
   const posthog = usePostHog();
 
@@ -38,7 +38,7 @@ const ThemeSwitcher = () => {
       <Text style={[styles.icon, { color: colors.primary }]}>
         {theme === "dark" ? "☾" : "☀"}
       </Text>
-      <Text style={[styles.label, { color: colors.text, writingDirection: direction }]}>
+      <Text style={[styles.label, { color: colors.text }, rtlText]}>
         {theme === "dark" ? t("common.dark") : t("common.light")}
       </Text>
     </Pressable>

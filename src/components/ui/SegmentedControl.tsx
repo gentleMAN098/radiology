@@ -1,12 +1,7 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
-import { getMedicalColors } from "./theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
+import { useRtlText } from "@/src/hooks/useRtlText";
 
 interface SegmentOption<T extends string> {
   label: string;
@@ -24,9 +19,9 @@ const SegmentedControl = <T extends string>({
   value,
   onChange,
 }: SegmentedControlProps<T>) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
-  const { direction, isRTL } = useI18n();
+  const { colors } = useThemeColors();
+  const { isRTL } = useI18n();
+  const rtlText = useRtlText();
 
   return (
     <View
@@ -55,10 +50,8 @@ const SegmentedControl = <T extends string>({
             <Text
               style={[
                 styles.label,
-                {
-                  color: isActive ? colors.primary : colors.mutedText,
-                  writingDirection: direction,
-                },
+                { color: isActive ? colors.primary : colors.mutedText },
+                rtlText,
               ]}
             >
               {option.label}

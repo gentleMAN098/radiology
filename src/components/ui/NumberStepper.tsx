@@ -1,23 +1,24 @@
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useI18n } from "@/i18n/I18nProvider";
-import { getMedicalColors } from "./theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
+import { useRtlText } from "@/src/hooks/useRtlText";
 
 interface NumberStepperProps {
   value: number;
   min?: number;
+  max?: number;
   onChange: (value: number) => void;
 }
 
-const NumberStepper = ({ value, min = 1, onChange }: NumberStepperProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
-  const { direction, isRTL } = useI18n();
+const NumberStepper = ({
+  value,
+  min = 1,
+  max = Infinity,
+  onChange,
+}: NumberStepperProps) => {
+  const { colors } = useThemeColors();
+  const { isRTL } = useI18n();
+  const rtlText = useRtlText();
 
   return (
     <View
@@ -38,17 +39,13 @@ const NumberStepper = ({ value, min = 1, onChange }: NumberStepperProps) => {
       >
         <Text style={[styles.controlText, { color: colors.primary }]}>-</Text>
       </Pressable>
-      <Text
-        style={[
-          styles.value,
-          { color: colors.text, writingDirection: direction },
-        ]}
-      >
+      <Text style={[styles.value, { color: colors.text }, rtlText]}>
         {value}
       </Text>
       <Pressable
         accessibilityRole="button"
-        onPress={() => onChange(value + 1)}
+        disabled={value >= max}
+        onPress={() => onChange(Math.min(max, value + 1))}
         style={styles.control}
       >
         <Text style={[styles.controlText, { color: colors.primary }]}>+</Text>

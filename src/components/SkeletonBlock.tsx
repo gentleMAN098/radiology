@@ -1,14 +1,13 @@
-import { StyleSheet, useColorScheme, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-import { getMedicalColors } from "./ui/theme";
+import { useThemeColors } from "@/src/hooks/useThemeColors";
 
 interface SkeletonBlockProps {
   height: number;
 }
 
 const SkeletonBlock = ({ height }: SkeletonBlockProps) => {
-  const isDark = useColorScheme() === "dark";
-  const colors = getMedicalColors(isDark);
+  const { colors } = useThemeColors();
 
   return <View style={[styles.block, { backgroundColor: colors.skeleton, height }]} />;
 };
