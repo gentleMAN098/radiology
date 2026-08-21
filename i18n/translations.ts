@@ -94,9 +94,6 @@ export const translations = {
         ],
       },
       doseRisk: {
-        title: "Dose & Risk Calculation",
-        // TODO(content): entirely missing — needs the "Understanding Your
-        // Results & Methodology" copy from the team, not to be authored by AI.
         sections: [],
         disclaimerTitle: "Disclaimer",
         disclaimerBody:
@@ -322,7 +319,6 @@ export const translations = {
         sections: [],
 
         disclaimerTitle: "سلب مسئولیت",
-
         disclaimerBody:
           "این اطلاعات صرفاً برای اهداف آموزشی ارائه شده‌اند و جایگزین توصیه‌های پزشکی حرفه‌ای، تشخیص یا درمان نیستند. لطفاً با پزشک خود مشورت کنید.",
       },

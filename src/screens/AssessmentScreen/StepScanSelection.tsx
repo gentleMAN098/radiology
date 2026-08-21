@@ -71,10 +71,6 @@ const StepScanSelection = ({
         <Text style={[styles.title, { color: colors.text }, rtlText]}>
           {t("assessment.step3Title")}
         </Text>
-        <InfoButton
-          accessibilityLabel={content.doseRisk.title}
-          onPress={onOpenDoseRisk}
-        />
       </View>
 
       <View style={styles.form}>
@@ -138,12 +134,6 @@ const StepScanSelection = ({
         />
       </View>
 
-      <InfoModal
-        visible={doseRiskVisible}
-        onClose={onCloseDoseRisk}
-        title={content.doseRisk.title}
-        sections={content.doseRisk.sections}
-      />
       <InfoModal
         visible={termsVisible}
         onClose={onCloseTerms}
