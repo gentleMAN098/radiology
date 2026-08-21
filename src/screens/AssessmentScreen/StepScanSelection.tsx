@@ -62,7 +62,12 @@ const StepScanSelection = ({
     <View style={styles.stepContainer}>
       <StepHeader step={3} totalSteps={3} onBack={onBack} />
 
-      <View style={styles.headerContainer}>
+      <View
+        style={[
+          styles.headerContainer,
+          { flexDirection: isRTL ? "row-reverse" : "row" },
+        ]}
+      >
         <Text style={[styles.title, { color: colors.text }, rtlText]}>
           {t("assessment.step3Title")}
         </Text>
@@ -85,7 +90,11 @@ const StepScanSelection = ({
           label={t("assessment.numberOfScans")}
           error={scanCount < 1 ? t("assessment.scansError") : undefined}
         >
-          <NumberStepper value={scanCount} min={1} onChange={onScanCountChange} />
+          <NumberStepper
+            value={scanCount}
+            min={1}
+            onChange={onScanCountChange}
+          />
         </Field>
       </View>
       <Card style={{ gap: 12 }}>
@@ -96,10 +105,19 @@ const StepScanSelection = ({
             alignItems: "center",
           }}
         >
-          <Text style={{ color: colors.text, fontWeight: "800", fontSize: 15 }}>
+          <Text
+            style={{
+              color: colors.text,
+              fontWeight: "800",
+              fontSize: 15,
+            }}
+          >
             {content.terms.title}
           </Text>
-          <InfoButton accessibilityLabel={content.terms.title} onPress={onOpenTerms} />
+          <InfoButton
+            accessibilityLabel={content.terms.title}
+            onPress={onOpenTerms}
+          />
         </View>
         <Checkbox
           checked={agreedToTerms}
@@ -112,7 +130,9 @@ const StepScanSelection = ({
         <MedicalButton
           disabled={!canCalculate || isCalculating}
           label={
-            isCalculating ? t("assessment.calculating") : t("assessment.calculate")
+            isCalculating
+              ? t("assessment.calculating")
+              : t("assessment.calculate")
           }
           onPress={onCalculate}
         />
@@ -142,6 +162,8 @@ const styles = StyleSheet.create({
   headerContainer: {
     gap: 8,
     marginBottom: 16,
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   title: {
     fontSize: 28,
@@ -150,6 +172,7 @@ const styles = StyleSheet.create({
   },
   form: {
     gap: 24,
+    marginBottom: 10,
   },
   footer: {
     marginTop: "auto",

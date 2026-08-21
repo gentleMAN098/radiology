@@ -14,7 +14,10 @@ interface ReferencesListProps {
   referencesLabel: string;
 }
 
-const ReferencesList = ({ references, referencesLabel }: ReferencesListProps) => {
+const ReferencesList = ({
+  references,
+  referencesLabel,
+}: ReferencesListProps) => {
   const { colors } = useThemeColors();
   const rtlText = useRtlText();
 

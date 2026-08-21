@@ -64,7 +64,6 @@ const ReportScreen = () => {
           },
         ]}
       />
-
       <BenchmarksSection report={report} />
 
       <MedicalButton

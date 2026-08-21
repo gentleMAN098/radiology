@@ -31,11 +31,6 @@ const UNIT_LABELS = {
   },
 } as const;
 
-/**
- * Formats a duration in years into a localized "Y years, M months, D days"
- * style string (word order/units match `language`; digits are localized
- * via Intl using `locale`, e.g. Persian digits for "fa-IR").
- */
 export function formatBackgroundRadiation(
   totalYears: number,
   language: "en" | "fa",

@@ -15,7 +15,13 @@ const StepHeader = ({ step, totalSteps, onBack }: StepHeaderProps) => {
 
   return (
     <View
-      style={[styles.headerRow, { flexDirection: isRTL ? "row-reverse" : "row" }]}
+      style={[
+        styles.headerRow,
+        {
+          flexDirection: isRTL ? "row-reverse" : "row",
+          justifyContent: "space-between",
+        },
+      ]}
     >
       <Pressable
         onPress={onBack}

@@ -25,7 +25,7 @@ const StepWelcome = ({
   onNext,
 }: StepWelcomeProps) => {
   const { colors } = useThemeColors();
-  const { t } = useI18n();
+  const { isRTL, t } = useI18n();
   const rtlText = useRtlText();
   const content = useContentTranslations();
 
@@ -35,14 +35,21 @@ const StepWelcome = ({
         <Text style={[styles.appName, { color: colors.primary }, rtlText]}>
           {t("common.ctRiskAppName")}
         </Text>
-        <Text style={[styles.title, { color: colors.text }, rtlText]}>
-          {t("assessment.aboutTitle")}
-        </Text>
+        <View
+          style={[
+            styles.titleContainer,
+            { flexDirection: isRTL ? "row-reverse" : "row" },
+          ]}
+        >
+          <Text style={[styles.title, { color: colors.text }, rtlText]}>
+            {t("assessment.aboutTitle")}
+          </Text>
+          <InfoButton
+            accessibilityLabel={t("assessment.aboutDescription")}
+            onPress={onOpenGuide}
+          />
+        </View>
       </View>
-      <InfoButton
-        accessibilityLabel={t("assessment.aboutDescription")}
-        onPress={onOpenGuide}
-      />
       <Text style={[styles.description, { color: colors.text }, rtlText]}>
         {t("assessment.aboutDescription")}
       </Text>
@@ -61,9 +68,10 @@ const StepWelcome = ({
         visible={guideVisible}
         onClose={onCloseGuide}
         title={content.guide.title}
-        intro={content.guide.intro}
+        // intro={content.guide.intro}
         sections={content.guide.sections}
         references={content.guide.references}
+        referencesLabel={content.guide.referenceLabel}
       />
     </View>
   );
@@ -73,6 +81,11 @@ const styles = StyleSheet.create({
   stepContainer: {
     flex: 1,
     justifyContent: "space-between",
+  },
+  titleContainer: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 6,
   },
   headerContainer: {
     gap: 8,

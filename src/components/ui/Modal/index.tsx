@@ -1,4 +1,10 @@
-import { Modal as RNModal, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Modal as RNModal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import { useThemeColors } from "@/src/hooks/useThemeColors";
 import { useRtlText } from "@/src/hooks/useRtlText";
@@ -60,7 +66,9 @@ const InfoModal = ({
           {sections.map((section, idx) => (
             <View key={idx} style={styles.section}>
               {!!section.heading && (
-                <Text style={[styles.heading, { color: colors.primary }, rtlText]}>
+                <Text
+                  style={[styles.heading, { color: colors.primary }, rtlText]}
+                >
                   {section.heading}
                 </Text>
               )}
@@ -76,7 +84,10 @@ const InfoModal = ({
           ))}
 
           {!!references && (
-            <ReferencesList references={references} referencesLabel={referencesLabel} />
+            <ReferencesList
+              references={references}
+              referencesLabel={referencesLabel}
+            />
           )}
         </ScrollView>
       </View>
