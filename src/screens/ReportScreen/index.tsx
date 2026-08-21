@@ -7,10 +7,10 @@ import MedicalButton from "@/src/components/ui/MedicalButton";
 import Screen from "@/src/components/ui/Screen";
 
 import BenchmarksSection from "./BenchmarksSection";
+import Disclaimer from "./Disclaimer";
 import ReportHeader from "./ReportHeader";
 import ReportLoadingState from "./ReportLoadingState";
 import { formatNumber, useReportData } from "./useReportData";
-import { Text } from "@react-navigation/elements";
 
 const ReportScreen = () => {
   const { t, locale } = useI18n();
@@ -64,24 +64,7 @@ const ReportScreen = () => {
         ]}
       />
       <BenchmarksSection report={report} />
-      <Text
-        style={{
-          marginTop: 24,
-          fontSize: 16,
-          fontWeight: "600",
-        }}
-      >
-        {t("content.doseRisk.disclaimerTitle")}
-      </Text>
-      <Text
-        style={{
-          marginTop: 8,
-          fontSize: 14,
-          lineHeight: 21,
-        }}
-      >
-        {t("content.doseRisk.disclaimerBody")}
-      </Text>
+      <Disclaimer />
       <MedicalButton
         label={t("report.recalculate")}
         onPress={() => {
