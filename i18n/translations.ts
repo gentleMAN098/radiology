@@ -146,7 +146,7 @@ export const translations = {
     },
 
     common: {
-      appName: "RadiDose",
+      appName: "RadiDose Insight",
       ctRiskAppName: "RadiDose Insight",
       english: "English",
       persian: "Persian",
