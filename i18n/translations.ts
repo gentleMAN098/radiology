@@ -163,7 +163,7 @@ export const translations = {
     assessment: {
       aboutTitle: "Welcome",
       aboutDescription:
-        "Hello! I am here to calculate the dose and the risk you CT scan. Please select on of the options below or press Next to continue:",
+        "Hello! I am here to calculate the dose and risk of your CT scan. Please select one of the options below or tap Next to continue:",
       step2Title: "Patient Information",
       step3Title: "Scan Selection",
       title: "CT Scan Risk Assessment",
