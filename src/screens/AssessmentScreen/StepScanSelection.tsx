@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
 import Card from "@/src/components/ui/Card";
@@ -62,65 +62,71 @@ const StepScanSelection = ({
     <View style={styles.stepContainer}>
       <StepHeader step={3} totalSteps={3} onBack={onBack} />
 
-      <View
-        style={[
-          styles.headerContainer,
-          { flexDirection: isRTL ? "row-reverse" : "row" },
-        ]}
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        <Text style={[styles.title, { color: colors.text }, rtlText]}>
-          {t("assessment.step3Title")}
-        </Text>
-      </View>
-
-      <View style={styles.form}>
-        <Field label={t("assessment.protocol")}>
-          <WheelPicker
-            protocols={CT_PROTOCOLS}
-            selectedId={scanId}
-            onChange={onScanIdChange}
-          />
-        </Field>
-
-        <Field
-          label={t("assessment.numberOfScans")}
-          error={scanCount < 1 ? t("assessment.scansError") : undefined}
-        >
-          <NumberStepper
-            value={scanCount}
-            min={1}
-            onChange={onScanCountChange}
-          />
-        </Field>
-      </View>
-      <Card style={{ gap: 12 }}>
         <View
-          style={{
-            flexDirection: isRTL ? "row-reverse" : "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
+          style={[
+            styles.headerContainer,
+            { flexDirection: isRTL ? "row-reverse" : "row" },
+          ]}
         >
-          <Text
+          <Text style={[styles.title, { color: colors.text }, rtlText]}>
+            {t("assessment.step3Title")}
+          </Text>
+        </View>
+
+        <View style={styles.form}>
+          <Field label={t("assessment.protocol")}>
+            <WheelPicker
+              protocols={CT_PROTOCOLS}
+              selectedId={scanId}
+              onChange={onScanIdChange}
+            />
+          </Field>
+
+          <Field
+            label={t("assessment.numberOfScans")}
+            error={scanCount < 1 ? t("assessment.scansError") : undefined}
+          >
+            <NumberStepper
+              value={scanCount}
+              min={1}
+              onChange={onScanCountChange}
+            />
+          </Field>
+        </View>
+        <Card style={{ gap: 12 }}>
+          <View
             style={{
-              color: colors.text,
-              fontWeight: "800",
-              fontSize: 15,
+              flexDirection: isRTL ? "row-reverse" : "row",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            {content.terms.title}
-          </Text>
-          <InfoButton
-            accessibilityLabel={content.terms.title}
-            onPress={onOpenTerms}
+            <Text
+              style={{
+                color: colors.text,
+                fontWeight: "800",
+                fontSize: 15,
+              }}
+            >
+              {content.terms.title}
+            </Text>
+            <InfoButton
+              accessibilityLabel={content.terms.title}
+              onPress={onOpenTerms}
+            />
+          </View>
+          <Checkbox
+            checked={agreedToTerms}
+            onChange={onAgreedToTermsChange}
+            label={content.terms.checkboxLabel}
           />
-        </View>
-        <Checkbox
-          checked={agreedToTerms}
-          onChange={onAgreedToTermsChange}
-          label={content.terms.checkboxLabel}
-        />
-      </Card>
+        </Card>
+      </ScrollView>
 
       <View style={styles.footer}>
         <MedicalButton
@@ -147,7 +153,12 @@ const StepScanSelection = ({
 const styles = StyleSheet.create({
   stepContainer: {
     flex: 1,
-    justifyContent: "space-between",
+  },
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    gap: 20,
   },
   headerContainer: {
     gap: 8,
@@ -165,7 +176,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   footer: {
-    marginTop: "auto",
     paddingTop: 20,
   },
 });

@@ -5,6 +5,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useThemeColors } from "@/src/hooks/useThemeColors";
 import { useRtlText } from "@/src/hooks/useRtlText";
@@ -42,6 +43,7 @@ const InfoModal = ({
 }: InfoModalProps) => {
   const { colors } = useThemeColors();
   const rtlText = useRtlText();
+  const insets = useSafeAreaInsets();
 
   return (
     <RNModal
@@ -50,11 +52,19 @@ const InfoModal = ({
       onRequestClose={onClose}
       presentationStyle="pageSheet"
     >
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: colors.background, paddingTop: insets.top },
+        ]}
+      >
         <ModalHeader title={title} onClose={onClose} closeLabel={closeLabel} />
 
         <ScrollView
-          contentContainerStyle={styles.body}
+          contentContainerStyle={[
+            styles.body,
+            { paddingBottom: insets.bottom + 32 },
+          ]}
           showsVerticalScrollIndicator={false}
         >
           {!!intro && (

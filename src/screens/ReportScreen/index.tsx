@@ -74,7 +74,8 @@ const ReportScreen = () => {
             scan_id: assessmentInput.scanId,
             scan_count: assessmentInput.scanCount,
           });
-          router.back();
+          router.dismissAll();
+          router.setParams({ reset: "1" });
         }}
       />
     </Screen>
