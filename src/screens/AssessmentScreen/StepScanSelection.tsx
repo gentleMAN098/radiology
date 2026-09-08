@@ -1,6 +1,7 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
+
 import Card from "@/src/components/ui/Card";
 import Checkbox from "@/src/components/ui/Checkbox";
 import Field from "@/src/components/ui/Field";
@@ -9,6 +10,7 @@ import MedicalButton from "@/src/components/ui/MedicalButton";
 import InfoModal from "@/src/components/ui/Modal";
 import NumberStepper from "@/src/components/ui/NumberStepper";
 import WheelPicker from "@/src/components/WheelPicker/WheelPicker";
+
 import { CT_PROTOCOLS } from "@/src/data/protocols";
 import { useContentTranslations } from "@/src/hooks/hooks";
 import { useRtlText } from "@/src/hooks/useRtlText";
@@ -19,17 +21,23 @@ import StepHeader from "./StepHeader";
 interface StepScanSelectionProps {
   scanId: number;
   onScanIdChange: (id: number) => void;
+
   scanCount: number;
   onScanCountChange: (count: number) => void;
+
   agreedToTerms: boolean;
   onAgreedToTermsChange: (value: boolean) => void;
+
   isCalculating: boolean;
   canCalculate: boolean;
+
   onCalculate: () => void;
   onBack: () => void;
+
   doseRiskVisible: boolean;
   onOpenDoseRisk: () => void;
   onCloseDoseRisk: () => void;
+
   termsVisible: boolean;
   onOpenTerms: () => void;
   onCloseTerms: () => void;
@@ -56,28 +64,39 @@ const StepScanSelection = ({
   const { colors } = useThemeColors();
   const { isRTL, t } = useI18n();
   const rtlText = useRtlText();
+
   const content = useContentTranslations();
 
   return (
     <View style={styles.stepContainer}>
+      {/* Header */}
       <StepHeader step={3} totalSteps={3} onBack={onBack} />
 
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      {/* Fixed page content */}
+      <View style={styles.content}>
+        {/* Title */}
         <View
           style={[
             styles.headerContainer,
-            { flexDirection: isRTL ? "row-reverse" : "row" },
+            {
+              flexDirection: isRTL ? "row-reverse" : "row",
+            },
           ]}
         >
-          <Text style={[styles.title, { color: colors.text }, rtlText]}>
+          <Text
+            style={[
+              styles.title,
+              {
+                color: colors.text,
+              },
+              rtlText,
+            ]}
+          >
             {t("assessment.step3Title")}
           </Text>
         </View>
 
+        {/* Form */}
         <View style={styles.form}>
           <Field label={t("assessment.protocol")}>
             <WheelPicker
@@ -98,7 +117,9 @@ const StepScanSelection = ({
             />
           </Field>
         </View>
-        <Card style={{ gap: 12 }}>
+
+        {/* Terms */}
+        <Card style={styles.termsCard}>
           <View
             style={{
               flexDirection: isRTL ? "row-reverse" : "row",
@@ -115,19 +136,22 @@ const StepScanSelection = ({
             >
               {content.terms.title}
             </Text>
+
             <InfoButton
               accessibilityLabel={content.terms.title}
               onPress={onOpenTerms}
             />
           </View>
+
           <Checkbox
             checked={agreedToTerms}
             onChange={onAgreedToTermsChange}
             label={content.terms.checkboxLabel}
           />
         </Card>
-      </ScrollView>
+      </View>
 
+      {/* Fixed footer */}
       <View style={styles.footer}>
         <MedicalButton
           disabled={!canCalculate || isCalculating}
@@ -154,29 +178,44 @@ const styles = StyleSheet.create({
   stepContainer: {
     flex: 1,
   },
-  scroll: {
+
+  /*
+   * The content itself is NOT scrollable.
+   * Everything must fit inside the available screen.
+   */
+  content: {
     flex: 1,
+    paddingTop: 4,
   },
-  scrollContent: {
-    gap: 20,
-  },
+
   headerContainer: {
     gap: 8,
-    marginBottom: 16,
+    marginBottom: 12,
     justifyContent: "space-between",
     alignItems: "center",
   },
+
   title: {
     fontSize: 28,
     fontWeight: "900",
     lineHeight: 34,
   },
+
   form: {
-    gap: 24,
-    marginBottom: 10,
+    gap: 16,
   },
+
+  termsCard: {
+    gap: 12,
+    marginTop: 16,
+  },
+
+  /*
+   * Footer stays at the bottom of the screen.
+   */
   footer: {
-    paddingTop: 20,
+    paddingTop: 12,
+    paddingBottom: 4,
   },
 });
 
