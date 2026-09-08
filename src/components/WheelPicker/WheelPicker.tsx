@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import {
   ScrollView,
   StyleSheet,
@@ -14,9 +15,23 @@ import { useThemeColors } from "@/src/hooks/useThemeColors";
 import { useRtlText } from "@/src/hooks/useRtlText";
 import { CtScanProtocol } from "@/src/domain/risk-engine/types";
 
-const ITEM_HEIGHT = 54;
-const VISIBLE_ITEMS = 5;
-const CENTER_OFFSET = ITEM_HEIGHT * 2;
+const ITEM_HEIGHT = 50;
+
+// Compact picker:
+// 25px half item
+// 50px full item
+// 50px selected item
+// 50px full item
+// 25px half item
+//
+// Total = 200px
+//
+// If you want it even smaller, reduce ITEM_HEIGHT to 44.
+const HALF_ITEM_HEIGHT = ITEM_HEIGHT / 2;
+
+const PICKER_HEIGHT = ITEM_HEIGHT * 4;
+
+const CENTER_TOP = ITEM_HEIGHT + HALF_ITEM_HEIGHT;
 
 interface WheelPickerProps {
   protocols: CtScanProtocol[];
@@ -31,18 +46,22 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
 
   const scrollRef = useRef<ScrollView>(null);
 
-  const initialIndex = Math.max(
-    0,
-    protocols.findIndex((p) => p.id === selectedId),
+  const getSelectedIndex = (id: number) => {
+    const index = protocols.findIndex((protocol) => protocol.id === id);
+
+    return index >= 0 ? index : 0;
+  };
+
+  const [selectedIndex, setSelectedIndex] = useState(
+    getSelectedIndex(selectedId),
   );
 
-  const [selectedIndex, setSelectedIndex] = useState(initialIndex);
-
   useEffect(() => {
-    const index = Math.max(
-      0,
-      protocols.findIndex((p) => p.id === selectedId),
-    );
+    if (!protocols.length) {
+      return;
+    }
+
+    const index = getSelectedIndex(selectedId);
 
     setSelectedIndex(index);
 
@@ -54,16 +73,20 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
     });
   }, [selectedId, protocols]);
 
-  const handleScrollEnd = (
-    event: NativeSyntheticEvent<NativeScrollEvent>,
-  ) => {
-    const offsetY = event.nativeEvent.contentOffset.y;
-    const index = Math.round(offsetY / ITEM_HEIGHT);
-    const clamped = Math.max(0, Math.min(index, protocols.length - 1));
+  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!protocols.length) {
+      return;
+    }
 
-    if (clamped !== selectedIndex) {
-      setSelectedIndex(clamped);
-      onChange(protocols[clamped].id);
+    const offsetY = event.nativeEvent.contentOffset.y;
+
+    const index = Math.round(offsetY / ITEM_HEIGHT);
+
+    const clampedIndex = Math.max(0, Math.min(index, protocols.length - 1));
+
+    if (clampedIndex !== selectedIndex) {
+      setSelectedIndex(clampedIndex);
+      onChange(protocols[clampedIndex].id);
     }
   };
 
@@ -73,6 +96,10 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
       animated: true,
     });
   };
+
+  if (!protocols.length) {
+    return null;
+  }
 
   return (
     <View
@@ -84,13 +111,12 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
         },
       ]}
     >
+      {/* Selected item indicator */}
       <View
         pointerEvents="none"
         style={[
           styles.selection,
           {
-            top: CENTER_OFFSET,
-            backgroundColor: "transparent",
             borderColor: colors.primary,
           },
         ]}
@@ -102,13 +128,11 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
         snapToInterval={ITEM_HEIGHT}
         snapToAlignment="start"
         decelerationRate="fast"
-        disableIntervalMomentum={false}
         bounces={false}
         overScrollMode="never"
+        nestedScrollEnabled
         scrollEventThrottle={16}
-        contentContainerStyle={{
-          paddingVertical: CENTER_OFFSET,
-        }}
+        contentContainerStyle={styles.contentContainer}
         onMomentumScrollEnd={handleScrollEnd}
       >
         {protocols.map((item, index) => {
@@ -124,23 +148,30 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
               <View style={styles.item}>
                 <Text
                   numberOfLines={1}
-                  style={{
-                    color: isSelected ? colors.primary : colors.text,
-                    fontSize: isSelected ? 18 : 16,
-                    fontWeight: isSelected ? "900" : "600",
-                    ...rtlText,
-                  }}
+                  style={[
+                    styles.name,
+                    {
+                      color: isSelected ? colors.primary : colors.text,
+                      fontSize: isSelected ? 17 : 15,
+                      fontWeight: isSelected ? "900" : "600",
+                    },
+                    rtlText,
+                  ]}
                 >
                   {language === "fa" ? item.nameFa : item.nameEn}
                 </Text>
 
                 <Text
-                  style={{
-                    color: isSelected ? colors.primary : colors.mutedText,
-                    fontSize: isSelected ? 13 : 12,
-                    fontWeight: isSelected ? "800" : "600",
-                    ...rtlText,
-                  }}
+                  numberOfLines={1}
+                  style={[
+                    styles.dose,
+                    {
+                      color: isSelected ? colors.primary : colors.mutedText,
+                      fontSize: isSelected ? 12 : 11,
+                      fontWeight: isSelected ? "800" : "600",
+                    },
+                    rtlText,
+                  ]}
                 >
                   {item.effectiveDose} {t("assessment.doseUnit")}
                 </Text>
@@ -155,20 +186,35 @@ const WheelPicker = ({ protocols, selectedId, onChange }: WheelPickerProps) => {
 
 const styles = StyleSheet.create({
   container: {
+    height: PICKER_HEIGHT,
     borderRadius: 8,
     borderWidth: 1,
-    height: ITEM_HEIGHT * VISIBLE_ITEMS,
     overflow: "hidden",
   },
 
   selection: {
     position: "absolute",
+
+    // Selected item is in the center
+    top: CENTER_TOP,
+
     left: 8,
     right: 8,
+
     height: ITEM_HEIGHT,
+
     borderRadius: 8,
     borderWidth: 1,
+
     zIndex: 10,
+  },
+
+  contentContainer: {
+    // Allows first item to reach the center
+    paddingTop: CENTER_TOP,
+
+    // Allows last item to reach the center
+    paddingBottom: CENTER_TOP,
   },
 
   itemTouchable: {
@@ -179,6 +225,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     paddingHorizontal: 16,
+  },
+
+  name: {
+    lineHeight: 20,
+  },
+
+  dose: {
+    marginTop: 1,
+    lineHeight: 15,
   },
 });
 
