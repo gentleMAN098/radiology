@@ -17,16 +17,6 @@ import { CtScanProtocol } from "@/src/domain/risk-engine/types";
 
 const ITEM_HEIGHT = 50;
 
-// Compact picker:
-// 25px half item
-// 50px full item
-// 50px selected item
-// 50px full item
-// 25px half item
-//
-// Total = 200px
-//
-// If you want it even smaller, reduce ITEM_HEIGHT to 44.
 const HALF_ITEM_HEIGHT = ITEM_HEIGHT / 2;
 
 const PICKER_HEIGHT = ITEM_HEIGHT * 4;

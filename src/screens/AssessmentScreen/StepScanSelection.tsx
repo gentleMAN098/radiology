@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
 
 import { useI18n } from "@/i18n/I18nProvider";
 
@@ -73,65 +72,84 @@ const StepScanSelection = ({
       {/* Header */}
       <StepHeader step={3} totalSteps={3} onBack={onBack} />
 
-      <View
-        style={[
-          styles.headerContainer,
-          { flexDirection: isRTL ? "row-reverse" : "row" },
-        ]}
-      >
-        <Text style={[styles.title, { color: colors.text }, rtlText]}>
-          {t("assessment.step3Title")}
-        </Text>
-      </View>
-
-      <View style={styles.form}>
-        <Field label={t("assessment.protocol")}>
-          <WheelPicker
-            protocols={CT_PROTOCOLS}
-            selectedId={scanId}
-            onChange={onScanIdChange}
-          />
-        </Field>
-
-        <Field
-          label={t("assessment.numberOfScans")}
-          error={scanCount < 1 ? t("assessment.scansError") : undefined}
-        >
-          <NumberStepper
-            value={scanCount}
-            min={1}
-            onChange={onScanCountChange}
-          />
-        </Field>
-      </View>
-      <Card style={{ gap: 12 }}>
+      {/* Fixed page content */}
+      <View style={styles.content}>
+        {/* Title */}
         <View
-          style={{
-            flexDirection: isRTL ? "row-reverse" : "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
+          style={[
+            styles.headerContainer,
+            {
+              flexDirection: isRTL ? "row-reverse" : "row",
+            },
+          ]}
         >
           <Text
+            style={[
+              styles.title,
+              {
+                color: colors.text,
+              },
+              rtlText,
+            ]}
+          >
+            {t("assessment.step3Title")}
+          </Text>
+        </View>
+
+        {/* Form */}
+        <View style={styles.form}>
+          <Field label={t("assessment.protocol")}>
+            <WheelPicker
+              protocols={CT_PROTOCOLS}
+              selectedId={scanId}
+              onChange={onScanIdChange}
+            />
+          </Field>
+
+          <Field
+            label={t("assessment.numberOfScans")}
+            error={scanCount < 1 ? t("assessment.scansError") : undefined}
+          >
+            <NumberStepper
+              value={scanCount}
+              min={1}
+              onChange={onScanCountChange}
+            />
+          </Field>
+        </View>
+
+        {/* Terms */}
+        <Card style={styles.termsCard}>
+          <View
             style={{
-              color: colors.text,
-              fontWeight: "800",
-              fontSize: 15,
+              flexDirection: isRTL ? "row-reverse" : "row",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            {content.terms.title}
-          </Text>
-          <InfoButton
-            accessibilityLabel={content.terms.title}
-            onPress={onOpenTerms}
+            <Text
+              style={{
+                color: colors.text,
+                fontWeight: "800",
+                fontSize: 15,
+              }}
+            >
+              {content.terms.title}
+            </Text>
+
+            <InfoButton
+              accessibilityLabel={content.terms.title}
+              onPress={onOpenTerms}
+            />
+          </View>
+
+          <Checkbox
+            checked={agreedToTerms}
+            onChange={onAgreedToTermsChange}
+            label={content.terms.checkboxLabel}
           />
-        </View>
-        <Checkbox
-          checked={agreedToTerms}
-          onChange={onAgreedToTermsChange}
-          label={content.terms.checkboxLabel}
-        />
-      </Card>
+        </Card>
+      </View>
 
       {/* Fixed footer */}
       <View style={styles.footer}>
@@ -159,8 +177,17 @@ const StepScanSelection = ({
 const styles = StyleSheet.create({
   stepContainer: {
     flex: 1,
-    justifyContent: "space-between",
   },
+
+  /*
+   * The content itself is NOT scrollable.
+   * Everything must fit inside the available screen.
+   */
+  content: {
+    flex: 1,
+    paddingTop: 4,
+  },
+
   headerContainer: {
     gap: 8,
     marginBottom: 12,
@@ -187,8 +214,8 @@ const styles = StyleSheet.create({
    * Footer stays at the bottom of the screen.
    */
   footer: {
-    marginTop: "auto",
-    paddingTop: 20,
+    paddingTop: 12,
+    paddingBottom: 4,
   },
 });
 
